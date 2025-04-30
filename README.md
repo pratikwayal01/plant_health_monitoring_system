@@ -105,4 +105,4 @@ plant_health_monitoring_system/
 
 ## License
 
-MIT License
+MIT License# Rule-based-crop-monitoring
