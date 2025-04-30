@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Health Monitoring System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/styles.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+        }
+        .form-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .feature-box {
+            background-color: #e9ecef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            height: 100%;
+        }
+        footer {
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header text-center">
+            <h1>Plant Health Monitoring System</h1>
+            <p class="lead">Upload your sensor data to get plant health insights and recommendations</p>
+        </div>
+        
+        <div class="row">
+            <!-- Main Form -->
+            <div class="col-lg-6 mx-auto">
+                <div class="form-container">
+                    <h2 class="mb-4">Upload Sensor Data</h2>
+                    
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="crop" class="form-label">Select Crop:</label>
+                            <select class="form-select" id="crop" name="crop" required>
+                                <option value="" selected disabled>Choose a crop...</option>
+                                {% for crop in crops %}
+                                <option value="{{ crop }}">{{ crop }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="growth_stage" class="form-label">Growth Stage:</label>
+                            <select class="form-select" id="growth_stage" name="growth_stage" required>
+                                <option value="" selected disabled>Choose a stage...</option>
+                                <option value="pre-fruit">Pre-Fruit</option>
+                                <option value="post-fruit">Post-Fruit</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Your Location (City):</label>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="e.g., London" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Upload CSV File:</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                            <div class="form-text">
+                                Upload a CSV file with columns: N, P, K, temperature, humidity, pH, rainfall, timestamp
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Analyze Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center">
+            <p>&copy; 2025 Plant Health Monitoring System | Developed by Your Team</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('uploadForm');  // The form element
+            
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();  // Prevent default form submission
+
+                const formData = new FormData(form);  // Create a FormData object
+
+                // Send the data to the Flask backend using fetch
+                fetch('/upload', {  // Flask route for handling file upload
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to report page on success
+                        window.location.href = '/report';  // Change this based on your routing
+                    } else {
+                        alert('Error: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during upload:', error);
+                    alert('An error occurred during file upload.');
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>
