@@ -9,7 +9,22 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../static/css/styles.css">
-
+    <style media="print">
+        .tab-content > .tab-pane {
+          display: block !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          height: auto !important;
+        }
+    
+        .nav-tabs {
+          display: none !important;
+        }
+    
+        .card {
+          page-break-inside: avoid;
+        }
+      </style>
 </head>
 <body>
     <div class="container">
