@@ -23,7 +23,7 @@ A Flask-based web application for monitoring plant health using IoT sensor data 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/plant-health-monitoring-system.git
+git clone https://github.com/pratikwayal01/plant-health-monitoring-system.git
 cd plant-health-monitoring-system
 ```
 
