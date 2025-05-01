@@ -218,11 +218,5 @@
                 }
             });
         });
-        
-        // Print report functionality
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('printReport').addEventListener('click', function () {
-                window.print();
-            });
-        });
+    
         
