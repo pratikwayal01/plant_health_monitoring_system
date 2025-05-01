@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Health Monitoring System</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/css/styles.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -26,13 +24,6 @@
             border-radius: 0.5rem;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
-        .feature-box {
-            background-color: #e9ecef;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            height: 100%;
-        }
         footer {
             margin-top: 3rem;
             padding: 1.5rem 0;
@@ -43,6 +34,18 @@
 </head>
 <body>
     <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <!-- Header -->
         <div class="header text-center">
             <h1>Plant Health Monitoring System</h1>
@@ -90,6 +93,9 @@
                         
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">Analyze Data</button>
+                            <a href="{{ url_for('add_crop') }}" class="btn btn-outline-secondary">
+                                Add New Crop
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -105,23 +111,20 @@
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('uploadForm');  // The form element
+            const form = document.getElementById('uploadForm');
             
             form.addEventListener('submit', function (event) {
-                event.preventDefault();  // Prevent default form submission
+                event.preventDefault();
+                const formData = new FormData(form);
 
-                const formData = new FormData(form);  // Create a FormData object
-
-                // Send the data to the Flask backend using fetch
-                fetch('/upload', {  // Flask route for handling file upload
+                fetch('/upload', {
                     method: 'POST',
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Redirect to report page on success
-                        window.location.href = '/report';  // Change this based on your routing
+                        window.location.href = '/report';
                     } else {
                         alert('Error: ' + (data.error || 'Unknown error'));
                     }
@@ -133,6 +136,6 @@
             });
         });
     </script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

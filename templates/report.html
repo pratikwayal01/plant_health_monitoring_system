@@ -73,6 +73,14 @@
             background-color: #f8f9fa;
             border-top: 1px solid #dee2e6;
         }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            background-color: #f8f9fa;
+            border-bottom-color: #f8f9fa;
+        }
+        .card-header {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -201,6 +209,53 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    Nitrogen (N) Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.N.value }}</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.N.ideal_range[0] }} - {{ health_analysis.parameters.N.ideal_range[1] }}</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.N.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.N.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.N.recommendation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    Phosphorus (P) Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.P.value }}</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.P.ideal_range[0] }} - {{ health_analysis.parameters.P.ideal_range[1] }}</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.P.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.P.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.P.recommendation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    Potassium (K) Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.K.value }}</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.K.ideal_range[0] }} - {{ health_analysis.parameters.K.ideal_range[1] }}</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.K.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.K.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.K.recommendation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Environmental Factors Tab -->
@@ -210,20 +265,74 @@
                             <div class="chart-container">
                                 <canvas id="temperatureChart"></canvas>
                             </div>
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    Temperature Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.temperature.value }}°C</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.temperature.ideal_range[0] }} - {{ health_analysis.parameters.temperature.ideal_range[1] }}°C</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.temperature.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.temperature.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.temperature.recommendation }}</p>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="chart-container">
                                 <canvas id="humidityChart"></canvas>
                             </div>
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    Humidity Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.humidity.value }}%</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.humidity.ideal_range[0] }} - {{ health_analysis.parameters.humidity.ideal_range[1] }}%</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.humidity.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.humidity.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.humidity.recommendation }}</p>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="row mt-4">
                         <div class="col-md-6">
                             <div class="chart-container">
                                 <canvas id="pHChart"></canvas>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    Soil pH Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.pH.value }}</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.pH.ideal_range[0] }} - {{ health_analysis.parameters.pH.ideal_range[1] }}</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.pH.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.pH.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.pH.recommendation }}</p>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="chart-container">
                                 <canvas id="rainfallChart"></canvas>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    Rainfall Status
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Value:</strong> {{ health_analysis.parameters.rainfall.value }}mm</p>
+                                    <p><strong>Ideal Range:</strong> {{ health_analysis.parameters.rainfall.ideal_range[0] }} - {{ health_analysis.parameters.rainfall.ideal_range[1] }}mm</p>
+                                    <p class="text-{{ 'success' if health_analysis.parameters.rainfall.status == 'good' else 'warning' }}">
+                                        {{ health_analysis.parameters.rainfall.message }}
+                                    </p>
+                                    <p><strong>Recommendation:</strong> {{ health_analysis.parameters.rainfall.recommendation }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -237,10 +346,10 @@
                             {% if param in health_analysis.parameters %}
                                 {% set param_data = health_analysis.parameters[param] %}
                                 <div class="col-md-6">
-                                    <div class="card parameter-card">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="card parameter-card mb-3">
+                                        <div class="card-header d-flex justify-content-between align-items-center bg-{{ 'success' if param_data.status == 'good' else 'warning' }} text-white">
                                             <h5 class="mb-0">{{ param }}</h5>
-                                            <span class="parameter-status status-{{ param_data.status }}">
+                                            <span class="badge bg-{{ 'success' if param_data.status == 'good' else 'warning' }}">
                                                 {{ param_data.status|capitalize }}
                                             </span>
                                         </div>
@@ -277,9 +386,25 @@
     <!-- Charts & Data Processing -->
     <script>
         // Parse the data from Flask
-        const processedData = JSON.parse('{{ processed_data|safe }}');
+        const processedData = JSON.parse('{{ processed_data|tojson|safe }}');
         
-        // Chart.js configuration
+        // Validate and ensure no negative values in chart data
+        function validateChartData(data) {
+            const validatedData = JSON.parse(JSON.stringify(data)); // Deep clone
+            
+            for (const param in validatedData.chart_data) {
+                validatedData.chart_data[param].values = validatedData.chart_data[param].values.map(value => {
+                    // Ensure all values are non-negative
+                    return Math.max(0, parseFloat(value) || 0);
+                });
+            }
+            
+            return validatedData;
+        }
+        
+        const safeData = validateChartData(processedData);
+        
+        // Initialize Chart.js
         Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
         Chart.defaults.color = '#6c757d';
         
@@ -287,14 +412,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             // N-P-K Nutrients Chart
             const nutrientsCtx = document.getElementById('nutrientsChart').getContext('2d');
-            const nutrientsChart = new Chart(nutrientsCtx, {
+            new Chart(nutrientsCtx, {
                 type: 'line',
                 data: {
-                    labels: processedData.chart_data.N.labels,
+                    labels: safeData.chart_data.N.labels,
                     datasets: [
                         {
                             label: 'Nitrogen (N)',
-                            data: processedData.chart_data.N.values,
+                            data: safeData.chart_data.N.values,
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             tension: 0.1,
@@ -302,7 +427,7 @@
                         },
                         {
                             label: 'Phosphorus (P)',
-                            data: processedData.chart_data.P.values,
+                            data: safeData.chart_data.P.values,
                             borderColor: 'rgba(153, 102, 255, 1)',
                             backgroundColor: 'rgba(153, 102, 255, 0.2)',
                             tension: 0.1,
@@ -310,7 +435,7 @@
                         },
                         {
                             label: 'Potassium (K)',
-                            data: processedData.chart_data.K.values,
+                            data: safeData.chart_data.K.values,
                             borderColor: 'rgba(255, 159, 64, 1)',
                             backgroundColor: 'rgba(255, 159, 64, 0.2)',
                             tension: 0.1,
@@ -325,9 +450,7 @@
                         title: {
                             display: true,
                             text: 'N-P-K Nutrient Levels Over Time',
-                            font: {
-                                size: 16
-                            }
+                            font: { size: 16 }
                         },
                         tooltip: {
                             mode: 'index',
@@ -335,32 +458,25 @@
                         }
                     },
                     scales: {
-                        y: {
+                        y: { 
                             beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Nutrient Level'
-                            }
+                            title: { display: true, text: 'Nutrient Level' },
+                            min: 0 // Ensure y-axis starts at 0
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        }
+                        x: { title: { display: true, text: 'Date' } }
                     }
                 }
             });
             
             // Temperature Chart
             const temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
-            const temperatureChart = new Chart(temperatureCtx, {
+            new Chart(temperatureCtx, {
                 type: 'line',
                 data: {
-                    labels: processedData.chart_data.temperature.labels,
+                    labels: safeData.chart_data.temperature.labels,
                     datasets: [{
                         label: 'Temperature (°C)',
-                        data: processedData.chart_data.temperature.values,
+                        data: safeData.chart_data.temperature.values,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         tension: 0.1,
@@ -370,21 +486,17 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
+                    plugins: { 
+                        title: { 
                             display: true,
                             text: 'Temperature Over Time',
-                            font: {
-                                size: 16
-                            }
+                            font: { size: 16 }
                         }
                     },
-                    scales: {
-                        y: {
-                            title: {
-                                display: true,
-                                text: '°C'
-                            }
+                    scales: { 
+                        y: { 
+                            title: { display: true, text: '°C' },
+                            min: 0 // Ensure no negative temperatures
                         }
                     }
                 }
@@ -392,13 +504,13 @@
             
             // Humidity Chart
             const humidityCtx = document.getElementById('humidityChart').getContext('2d');
-            const humidityChart = new Chart(humidityCtx, {
+            new Chart(humidityCtx, {
                 type: 'line',
                 data: {
-                    labels: processedData.chart_data.humidity.labels,
+                    labels: safeData.chart_data.humidity.labels,
                     datasets: [{
                         label: 'Humidity (%)',
-                        data: processedData.chart_data.humidity.values,
+                        data: safeData.chart_data.humidity.values,
                         borderColor: 'rgba(54, 162, 235, 1)',
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         tension: 0.1,
@@ -408,21 +520,18 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
+                    plugins: { 
+                        title: { 
                             display: true,
                             text: 'Humidity Over Time',
-                            font: {
-                                size: 16
-                            }
+                            font: { size: 16 }
                         }
                     },
-                    scales: {
-                        y: {
-                            title: {
-                                display: true,
-                                text: '%'
-                            }
+                    scales: { 
+                        y: { 
+                            title: { display: true, text: '%' },
+                            min: 0,
+                            max: 100 // Humidity can't exceed 100%
                         }
                     }
                 }
@@ -430,13 +539,13 @@
             
             // pH Chart
             const pHCtx = document.getElementById('pHChart').getContext('2d');
-            const pHChart = new Chart(pHCtx, {
+            new Chart(pHCtx, {
                 type: 'line',
                 data: {
-                    labels: processedData.chart_data.pH.labels,
+                    labels: safeData.chart_data.pH.labels,
                     datasets: [{
                         label: 'Soil pH',
-                        data: processedData.chart_data.pH.values,
+                        data: safeData.chart_data.pH.values,
                         borderColor: 'rgba(255, 206, 86, 1)',
                         backgroundColor: 'rgba(255, 206, 86, 0.2)',
                         tension: 0.1,
@@ -446,13 +555,17 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
+                    plugins: { 
+                        title: { 
                             display: true,
                             text: 'Soil pH Over Time',
-                            font: {
-                                size: 16
-                            }
+                            font: { size: 16 }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            min: 0,
+                            max: 14 // pH scale is 0-14
                         }
                     }
                 }
@@ -460,13 +573,13 @@
             
             // Rainfall Chart
             const rainfallCtx = document.getElementById('rainfallChart').getContext('2d');
-            const rainfallChart = new Chart(rainfallCtx, {
+            new Chart(rainfallCtx, {
                 type: 'line',
                 data: {
-                    labels: processedData.chart_data.rainfall.labels,
+                    labels: safeData.chart_data.rainfall.labels,
                     datasets: [{
                         label: 'Rainfall (mm)',
-                        data: processedData.chart_data.rainfall.values,
+                        data: safeData.chart_data.rainfall.values,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         tension: 0.1,
@@ -476,21 +589,17 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
+                    plugins: { 
+                        title: { 
                             display: true,
                             text: 'Rainfall Over Time',
-                            font: {
-                                size: 16
-                            }
+                            font: { size: 16 }
                         }
                     },
-                    scales: {
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'mm'
-                            }
+                    scales: { 
+                        y: { 
+                            title: { display: true, text: 'mm' },
+                            min: 0 // Rainfall can't be negative
                         }
                     }
                 }

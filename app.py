@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, flash, render_template, request, jsonify, session, redirect, url_for
 import os
 import pandas as pd
 import json
@@ -6,83 +6,18 @@ from datetime import datetime
 from utils.data_processor import process_csv_data
 from utils.health_analyzer import analyze_health
 from utils.weather_api import get_weather_data
+from utils.crop_manager import add_new_crop, get_crop_list, get_ideal_values
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # For session management
+app.secret_key = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-# Create upload folder if it doesn't exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-# Ideal values for different crops and growth stages
-ideal_values = {
-    "Tomato": {
-        "pre-fruit": {
-            "N": [30, 50], 
-            "P": [20, 40], 
-            "K": [40, 60], 
-            "temperature": [20, 30], 
-            "humidity": [60, 80], 
-            "pH": [6.0, 6.8], 
-            "rainfall": [20, 40]
-        },
-        "post-fruit": {
-            "N": [20, 40], 
-            "P": [15, 35], 
-            "K": [45, 65], 
-            "temperature": [18, 28], 
-            "humidity": [65, 85], 
-            "pH": [6.2, 7.0], 
-            "rainfall": [25, 45]
-        }
-    },
-    "Wheat": {
-        "pre-fruit": {
-            "N": [40, 60], 
-            "P": [30, 50], 
-            "K": [20, 40], 
-            "temperature": [15, 25], 
-            "humidity": [40, 60], 
-            "pH": [6.0, 7.5], 
-            "rainfall": [15, 30]
-        },
-        "post-fruit": {
-            "N": [30, 50], 
-            "P": [25, 45], 
-            "K": [25, 45], 
-            "temperature": [18, 28], 
-            "humidity": [35, 55], 
-            "pH": [6.2, 7.8], 
-            "rainfall": [10, 25]
-        }
-    },
-    "Rice": {
-        "pre-fruit": {
-            "N": [50, 70], 
-            "P": [25, 45], 
-            "K": [30, 50], 
-            "temperature": [22, 32], 
-            "humidity": [70, 90], 
-            "pH": [5.0, 6.5], 
-            "rainfall": [40, 60]
-        },
-        "post-fruit": {
-            "N": [40, 60], 
-            "P": [20, 40], 
-            "K": [35, 55], 
-            "temperature": [25, 35], 
-            "humidity": [75, 95], 
-            "pH": [5.2, 6.8], 
-            "rainfall": [45, 65]
-        }
-    }
-}
 
 @app.route('/')
 def index():
-    # Get list of crops from ideal_values
-    crops = list(ideal_values.keys())
+    crops = get_crop_list()
     return render_template('index.html', crops=crops)
 
 @app.route('/upload', methods=['POST'])
@@ -121,7 +56,7 @@ def upload_file():
             session['processed_data'] = processed_data_safe
 
             # Analyze health
-            crop_ideal_values = ideal_values.get(crop, {}).get(growth_stage, {})
+            crop_ideal_values = get_ideal_values(crop, growth_stage)
             health_analysis = analyze_health(processed_data, crop_ideal_values)
             session['health_analysis'] = health_analysis
 
@@ -134,6 +69,42 @@ def upload_file():
             return jsonify({'error': str(e)}), 400
     else:
         return jsonify({'error': 'Only CSV files are allowed'}), 400
+@app.route('/add_crop', methods=['GET', 'POST'])
+def add_crop():
+    if request.method == 'POST':
+        try:
+            # Extract form data
+            crop_name = request.form['crop_name']
+            
+            # Prepare pre-fruit values
+            pre_fruit = {}
+            post_fruit = {}
+            
+            for param in ['N', 'P', 'K', 'temperature', 'humidity', 'pH', 'rainfall']:
+                pre_fruit[param] = [
+                    float(request.form[f'pre_{param}_min']),
+                    float(request.form[f'pre_{param}_max'])
+                ]
+                post_fruit[param] = [
+                    float(request.form[f'post_{param}_min']),
+                    float(request.form[f'post_{param}_max'])
+                ]
+            
+            # Add the new crop
+            add_new_crop(crop_name, pre_fruit, post_fruit)
+            flash(f'Crop "{crop_name}" added successfully!', 'success')
+            return redirect(url_for('index'))
+            
+        except ValueError as e:
+            flash(str(e), 'danger')
+        except Exception as e:
+            flash(f'Error adding crop: {str(e)}', 'danger')
+    
+    return render_template('add_crop.html')
+
+@app.route('/manage_crops')
+def manage_crops():
+    return render_template('add_crop.html')
 
 @app.route('/report')
 def report():
