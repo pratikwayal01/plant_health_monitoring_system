@@ -17,6 +17,18 @@
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             margin-bottom: 2rem;
         }
+        .is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875em;
+        }
+        .param-group {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -39,41 +51,83 @@
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="form-container">
-                    <form method="POST" action="{{ url_for('add_crop') }}">
+                    <form id="cropForm" method="POST" action="{{ url_for('add_crop') }}" novalidate>
                         <div class="mb-3">
                             <label for="crop_name" class="form-label">Crop Name</label>
-                            <input type="text" class="form-control" id="crop_name" name="crop_name" required>
+                            <input type="text" class="form-control" id="crop_name" name="crop_name" required
+                                   pattern="[A-Za-z\s]{2,50}" title="Only letters and spaces (2-50 characters)">
+                            <div class="invalid-feedback">
+                                Please enter a valid crop name (2-50 letters/spaces only)
+                            </div>
                         </div>
 
                         <h4 class="mt-4">Pre-Fruit Stage Values</h4>
                         {% for param in ['N', 'P', 'K', 'temperature', 'humidity', 'pH', 'rainfall'] %}
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="pre_{{param}}_min" class="form-label">{{param}} Min</label>
-                                <input type="number" step="0.1" class="form-control" id="pre_{{param}}_min" name="pre_{{param}}_min" required>
-                            </div>
-                            <div class="col">
-                                <label for="pre_{{param}}_max" class="form-label">{{param}} Max</label>
-                                <input type="number" step="0.1" class="form-control" id="pre_{{param}}_max" name="pre_{{param}}_max" required>
+                        <div class="param-group">
+                            <h5>{{ param }}</h5>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="pre_{{param}}_min" class="form-label">Min Value</label>
+                                    <input type="number" step="0.1" class="form-control pre-{{param}}" 
+                                           id="pre_{{param}}_min" name="pre_{{param}}_min" required
+                                           min="{{ 0 if param != 'temperature' else -20 }}"
+                                           max="{{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }}">
+                                    <div class="invalid-feedback">
+                                        Invalid value (must be between 
+                                        {{ 0 if param != 'temperature' else -20 }} and 
+                                        {{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }})
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="pre_{{param}}_max" class="form-label">Max Value</label>
+                                    <input type="number" step="0.1" class="form-control pre-{{param}}" 
+                                           id="pre_{{param}}_max" name="pre_{{param}}_max" required
+                                           min="{{ 0 if param != 'temperature' else -20 }}"
+                                           max="{{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }}">
+                                    <div class="invalid-feedback">
+                                        Invalid value (must be between 
+                                        {{ 0 if param != 'temperature' else -20 }} and 
+                                        {{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }})
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {% endfor %}
 
                         <h4 class="mt-4">Post-Fruit Stage Values</h4>
                         {% for param in ['N', 'P', 'K', 'temperature', 'humidity', 'pH', 'rainfall'] %}
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="post_{{param}}_min" class="form-label">{{param}} Min</label>
-                                <input type="number" step="0.1" class="form-control" id="post_{{param}}_min" name="post_{{param}}_min" required>
-                            </div>
-                            <div class="col">
-                                <label for="post_{{param}}_max" class="form-label">{{param}} Max</label>
-                                <input type="number" step="0.1" class="form-control" id="post_{{param}}_max" name="post_{{param}}_max" required>
+                        <div class="param-group">
+                            <h5>{{ param }}</h5>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="post_{{param}}_min" class="form-label">Min Value</label>
+                                    <input type="number" step="0.1" class="form-control post-{{param}}" 
+                                           id="post_{{param}}_min" name="post_{{param}}_min" required
+                                           min="{{ 0 if param != 'temperature' else -20 }}"
+                                           max="{{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }}">
+                                    <div class="invalid-feedback">
+                                        Invalid value (must be between 
+                                        {{ 0 if param != 'temperature' else -20 }} and 
+                                        {{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }})
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="post_{{param}}_max" class="form-label">Max Value</label>
+                                    <input type="number" step="0.1" class="form-control post-{{param}}" 
+                                           id="post_{{param}}_max" name="post_{{param}}_max" required
+                                           min="{{ 0 if param != 'temperature' else -20 }}"
+                                           max="{{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }}">
+                                    <div class="invalid-feedback">
+                                        Invalid value (must be between 
+                                        {{ 0 if param != 'temperature' else -20 }} and 
+                                        {{ 100 if param in ['N','P','K','humidity'] else (14 if param == 'pH' else 50) }})
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {% endfor %}
 
-                        <div class="d-grid gap-2">
+                        <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">Add Crop</button>
                             <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
                         </div>
@@ -84,5 +138,92 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('cropForm');
+            
+            // Custom validation for min/max pairs
+            function validateMinMaxPairs() {
+                let isValid = true;
+                
+                // Validate all parameter groups
+                ['N', 'P', 'K', 'temperature', 'humidity', 'pH', 'rainfall'].forEach(param => {
+                    // Pre-fruit validation
+                    const preMin = document.getElementById(`pre_${param}_min`);
+                    const preMax = document.getElementById(`pre_${param}_max`);
+                    
+                    if (parseFloat(preMin.value) >= parseFloat(preMax.value)) {
+                        preMin.classList.add('is-invalid');
+                        preMax.classList.add('is-invalid');
+                        preMin.nextElementSibling.textContent = 'Min must be less than Max';
+                        preMax.nextElementSibling.textContent = 'Max must be greater than Min';
+                        isValid = false;
+                    }
+                    
+                    // Post-fruit validation
+                    const postMin = document.getElementById(`post_${param}_min`);
+                    const postMax = document.getElementById(`post_${param}_max`);
+                    
+                    if (parseFloat(postMin.value) >= parseFloat(postMax.value)) {
+                        postMin.classList.add('is-invalid');
+                        postMax.classList.add('is-invalid');
+                        postMin.nextElementSibling.textContent = 'Min must be less than Max';
+                        postMax.nextElementSibling.textContent = 'Max must be greater than Min';
+                        isValid = false;
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // Form submission handler
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                // Reset validation
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                
+                // Check HTML5 validation
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                // Check custom validation
+                if (!validateMinMaxPairs()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                // If all valid, submit the form
+                form.submit();
+            });
+            
+            // Real-time validation for min/max pairs
+            form.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    const param = this.id.split('_')[1];
+                    const isPre = this.id.startsWith('pre');
+                    const minInput = isPre ? 
+                        document.getElementById(`pre_${param}_min`) : 
+                        document.getElementById(`post_${param}_min`);
+                    const maxInput = isPre ? 
+                        document.getElementById(`pre_${param}_max`) : 
+                        document.getElementById(`post_${param}_max`);
+                    
+                    if (parseFloat(minInput.value) >= parseFloat(maxInput.value)) {
+                        minInput.classList.add('is-invalid');
+                        maxInput.classList.add('is-invalid');
+                        minInput.nextElementSibling.textContent = 'Min must be less than Max';
+                        maxInput.nextElementSibling.textContent = 'Max must be greater than Min';
+                    } else {
+                        minInput.classList.remove('is-invalid');
+                        maxInput.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
