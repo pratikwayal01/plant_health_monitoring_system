@@ -3,7 +3,7 @@ body {
     background-color: #f8f9fa;
     font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 2rem 0; /* Combined padding-top and padding-bottom */
 }
 
 .container {
@@ -14,9 +14,10 @@ body {
 .header {
     background-color: #28a745;
     color: white;
-    padding: 2rem 0;
-    text-align: center;
+    padding: 1.5rem 0; /* Adjusted padding */
+    margin-bottom: 2rem;
     border-radius: 0.5rem;
+    text-align: center;
 }
 
 .header h1 {
@@ -122,6 +123,8 @@ footer {
     background-color: #28a745;
     color: white;
     border-color: #28a745;
+    font-weight: bold;
+    border-bottom-color: #f8f9fa; /* This line ensures consistency with the active tab's border style */
 }
 
 .nav-tabs {
@@ -137,4 +140,21 @@ footer {
 .alert-info {
     background-color: #d1ecf1;
     border-color: #bee5eb;
+}
+
+/* Parameter Card */
+.parameter-card {
+    margin-bottom: 1.5rem;
+}
+
+.parameter-status {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+/* Card Header */
+.card-header {
+    font-weight: bold;
 }
